@@ -1,21 +1,26 @@
 #include <iostream>
 #include <unordered_map>
 
-bool duplicateCharFinder(const std::string& word)
+bool nonDuplicateCharFinder(const std::string& word)
 {
-    std::unordered_map<char, bool> findDuplicateChar;
+    std::unordered_map<char, int> findNonDuplicateChar;
 
     for(char i : word)
     {
-        if(findDuplicateChar[i])
+            findNonDuplicateChar[i] += 1;
+    }
+
+    for(char i : word)
+    {
+        if(findNonDuplicateChar[i] == 1)
         {
             std::cout << "The character '" << i << "' is the first character found \n"
-                      <<"that is a duplicated in the word '" << word << "'.\n";
+                      <<"that is a non-duplicate in the word '" << word << "'.\n";
             return true;
         }
         else
         {
-            findDuplicateChar[i] = true;
+            ;
         }
     }
 
@@ -24,18 +29,17 @@ bool duplicateCharFinder(const std::string& word)
 
 int main()
 {
-    std::cout << "Let's print out the first duplicated letter from a word.\n\n";
+    std::cout << "Let's print out the first non-duplicated letter from a word.\n\n";
 
     std::string word{"minimum"};
 
-    if(duplicateCharFinder(word))
+    if(nonDuplicateCharFinder(word))
     {
-        return 1;
+        return 0;
     }
     else
     {
-        std::cout << "The word '" << word << "' does not have any duplicate letters.\n";
+        std::cout << "The word '" << word << "' has all duplicate letters.\n";
+        return 1;
     }
-
-    return 0;
 }
