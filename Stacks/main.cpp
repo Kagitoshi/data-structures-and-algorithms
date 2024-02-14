@@ -1,11 +1,11 @@
 #include <iostream>
 #include <stack>
 
-std::string reverseString(const std::string& testString)
+std::string reverseString(const std::string& userString)
 {
     std::stack<char> stringStack{};
 
-    for(const char& i : testString)
+    for(const char& i : userString)
     {
         stringStack.push(i);
     }
@@ -21,12 +21,12 @@ std::string reverseString(const std::string& testString)
     return reversedString;
 }
 
-bool checkBrackets(const std::string& testString)
+bool checkBrackets(const std::string& userString)
 {
 
     std::stack<char> bracketStack{};
 
-    for(const char& i: testString)
+    for(const char& i: userString)
     {
         if( i == '(' || i == '[' || i == '{' || i == ')' || i == ']' || i == '}')
         {
@@ -121,15 +121,17 @@ int main()
 {
     std::cout << "Let's practice using a stack data structure by\n"
               << "seeing if we can reverse a string, then we see\n"
-              << "if the brackets in a string have a opening and closing pair.\n\n";
+              << "if the brackets in a string have a opening and closing pair.\n"
+              << "Please enter your string that you would like to reverse and check.\n";
 
-    std::string testString{"( var x = y: [1, 2, 3,] } )"};
+    std::string userString{};
+    std::getline(std::cin, userString);
 
     std::cout << "First let's reverse the string: \n"
-              << reverseString(testString) << '\n'
+              << reverseString(userString) << '\n'
               << "\nNice! Now let's check for the opening and closing brackets.\n\n";
 
-    if (checkBrackets(testString))
+    if (checkBrackets(userString))
     {
         std::cout << "All of the brackets are accounted for. Nice!\n\n";
         return 0;
