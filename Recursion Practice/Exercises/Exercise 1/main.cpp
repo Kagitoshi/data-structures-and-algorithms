@@ -7,27 +7,13 @@ int countCharsInVector(std::vector <std::string>& vectorOfStrings)
 {
     if(vectorOfStrings.size() == 1)
     {
-        int count{};
-        for(char i : vectorOfStrings[0])
-        {
-            count++;
-        }
-        return count;
-    }
-
-    int charCount{};
-
-    for(char i : vectorOfStrings[0] )
-    {
-
-        charCount++;
-
+        return vectorOfStrings[0].size();
     }
 
     std::vector <std::string> copyOfVector(vectorOfStrings.size() - 1);
     std::copy(vectorOfStrings.begin()+1, vectorOfStrings.end(), copyOfVector.begin());
 
-    return charCount + countCharsInVector(copyOfVector);
+    return vectorOfStrings[0].size() + countCharsInVector(copyOfVector);
 }
 
 int main()
