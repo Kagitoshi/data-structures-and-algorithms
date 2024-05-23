@@ -3,7 +3,7 @@
 //Using recursion to find all the shortest unique paths in a grid.
 int uniquePaths(int userColumns, int userRows)
 {
-    if(userColumns == 1 && userRows == 1 )
+    if(userColumns == 1 || userRows == 1 )
     {
         return 1;
     }
