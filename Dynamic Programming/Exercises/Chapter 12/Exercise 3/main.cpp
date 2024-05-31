@@ -22,7 +22,7 @@ struct PairHasher
 
 //The exercise gives a solution. I am told to improve it with memoization.
 //I will do that by using an unordered map.
-int uniquePaths(int userColumns, int userRows, std::unordered_map<std::pair<int,int>, int, PairHasher> answerTracker)
+int uniquePaths(int userColumns, int userRows, std::unordered_map<std::pair<int,int>, int, PairHasher>& answerTracker)
 {
 
     if(userColumns == 1 || userRows == 1 )
