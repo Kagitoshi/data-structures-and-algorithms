@@ -112,7 +112,7 @@ void linkedList<T>::addElementEnd(T dataToAddAtLastNode)
 
     Current linked list head -> 4 -> 2 -> 5 -> null
     addElementAfter(3, 6)
-    New linked list head -> 4 -> 2 -> 5 -> null
+    Linked list head -> 4 -> 2 -> 5 -> null
     Output: 6 cannot be found in the linked list.
  */
 template <typename T>
@@ -147,11 +147,81 @@ void linkedList<T>::addElementAfter(T dataToFind, T dataToAddAfterFoundData)
     The following function searches for a node containing data that has been
     passed through the argument and deletes it.
 
+    A new node is created using the "head" node as a starting point.
+
     If it does not find it or the list is empty, a string is
     outputted stating that fact.
 
-    If it does find it, it
+    If it is not empty, it first searches the node the current node is pointing to. If that node
+    contains the data that is being request to delete, it then points the current node to the whatever
+    the next node if pointing to.
+
+    If that node doesn't contain the data, the new node then becomes the node the current node is
+    pointing to until it finds the data or hits a nullptr, which then a string is outputted
+    stating that fact.
+
+    e.g. Current linked list head -> 4 -> 2 -> 6 -> 5 -> null
+    deleteElement(6)
+    New linked list head -> 4 -> 2 -> 5 -> null
+
+    Current linked list head -> 4 -> 2 -> 5 -> null
+    deleteElement(6)
+    Linked list head -> 4 -> 2 -> 5 -> null
+    Output: 6 cannot be found in the linked list.
+
  */
+template <typename T>
+void linkedList<T>::deleteElement(T dataToDelete)
+{
+    Node<T>* searchForNodeToDelete{head};
+
+    if(searchForNodeToDelete -> data == nullptr)
+    {
+        std::cout << "\n\nUnable to delete \"" << dataToDelete << "\" from the linked list,\n"
+                  << "because the linked list is empty.\n\n";
+    }
+
+    while(searchForNodeToDelete -> next != nullptr)
+    {
+        if(searchForNodeToDelete -> next -> data == dataToDelete)
+        {
+            searchForNodeToDelete -> next = searchForNodeToDelete -> next -> next;
+            return;
+        }
+
+        else
+        {
+            dataToDelete = dataToDelete -> next;
+        }
+    }
+
+    std::cout << "\n\nThe data you wish to delete, \"" << dataToDelete
+              << "\" could not be found in the linked list.\n\n";
+}
+
+/*
+
+ */
+
+template <typename T>
+void linkedList<typename T>::display()
+{
+    Node<T>* currentNode{head};
+
+    if(currentNode == nullptr)
+    {
+        std::cout << "\n\nThe linked list is currently empty.\n\n";
+    }
+
+    int i{0};
+
+    while(currentNode != nullptr)
+    {
+        std::cout << "Number " << i << " node contains the data  " << currentNode -> data << ".\n";
+    }
+
+    std::cout << "\n";
+}
 
 
 int main()
