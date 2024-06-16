@@ -204,7 +204,7 @@ void linkedList<T>::deleteElement(T dataToDelete)
  */
 
 template <typename T>
-void linkedList<typename T>::display()
+void linkedList<T>::display()
 {
     Node<T>* currentNode{head};
 
@@ -217,7 +217,8 @@ void linkedList<typename T>::display()
 
     while(currentNode != nullptr)
     {
-        std::cout << "Number " << i << " node contains the data  " << currentNode -> data << ".\n";
+        std::cout << "Number " << ++i << " node contains the data " << currentNode -> data << ".\n";
+        currentNode = currentNode -> next;
     }
 
     std::cout << "\n";
@@ -234,14 +235,39 @@ int main()
               << "Let's start exploring them and learn the differences between them.\n\n"
               << "Before we start with classic operations, let's create out linked list.\n"
               << "I will create 3 nodes. The data will be the name of colors.\n"
-              << "Let's start with blue, green, and red in that order.\n"
+              << "Let's start with red, orange, and yellow.\n"
               << "So that means each node should contain a string and a pointer\n"
               << "to the next node containing different data until we reach\n"
-              << "a \"null\" pointer.\n\n";
+              << "a \"null\" pointer. Let's first test out the \"addElementFirst\" function."
+              << "We will add them in the order of \"yellow orange red\", which means the order in the linked list"
+              << "should be \"red orange yellow\" \n\n";
 
+    linkedList<std::string> colors;
 
+    colors.display();
 
+    colors.addElementFirst("yellow");
+    colors.addElementFirst("orange");
+    colors.addElementFirst("red");
+    colors.display();
 
+    std::cout << "Next let's try out the \"addElementEnd\" function.\n"
+              << "We will add 3 colors in the following order \"green blue violet\".\n"
+              << "So, it should show up at the end of the list in the following order:\n"
+              << "\"green blue violet\", which will be appended to the list we already created.\n\n";
+
+    colors.addElementEnd("green");
+    colors.addElementEnd("blue");
+    colors.addElementEnd("violet");
+    colors.display();
+
+    std::cout << "Now let's try out the \"addElementAfter\" function. Which should add a node\n"
+              << "containing specified data after finding a node with data we are looking for.\n"
+              << "Let's look for \"blue\" and add a node containing \"indigo\".\n"
+              << "When we print the linked list indigo should appear after blue.\n\n";
+
+    colors.addElementAfter("blue", "indigo");
+    colors.display();
 
     return 0;
 }
