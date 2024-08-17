@@ -113,7 +113,7 @@ void linkedList<T>::addElementEnd(T dataToAddAtLastNode)
     Current linked list head -> 4 -> 2 -> 5 -> null
     addElementAfter(3, 6)
     Linked list head -> 4 -> 2 -> 5 -> null
-    Output: 6 cannot be found in the linked list.
+    Output: 3 cannot be found in the linked list.
  */
 template <typename T>
 void linkedList<T>::addElementAfter(T dataToFind, T dataToAddAfterFoundData)
@@ -135,12 +135,9 @@ void linkedList<T>::addElementAfter(T dataToFind, T dataToAddAfterFoundData)
         nodeToSearch = nodeToSearch -> next;
     }
 
-    if(nodeToSearch == nullptr)
-    {
-        std::cout << "\n\nA node containing \"" << dataToFind << "\" could not be\n"
-                  << "found. Therefore, a new node with the data \""
-                  << dataToAddAfterFoundData << "\" has not been added.\n\n";
-    }
+    std::cout << "\n\nA node containing \"" << dataToFind << "\" could not be\n"
+              << "found. Therefore, a new node with the data \""
+              << dataToAddAfterFoundData << "\" has not been added.\n\n";
 }
 
 /*
@@ -160,6 +157,15 @@ void linkedList<T>::addElementAfter(T dataToFind, T dataToAddAfterFoundData)
     pointing to until it finds the data or hits a nullptr, which then a string is outputted
     stating that fact.
 
+    By using the keyword \"delete\", it will free up the memory that is being used to store
+    that node. If it is not deleted, the memory will not be freed and the application will
+    begin to leak memory.
+
+    There is another keyword called \"free\" that does the same thing but should be used when you allocated
+    memory before for the variable.
+    e.g. When using \"malloc\" to allocate the memory, free should be used when you wish to free that
+    memory up for the OS.
+
     e.g. Current linked list head -> 4 -> 2 -> 6 -> 5 -> null
     deleteElement(6)
     New linked list head -> 4 -> 2 -> 5 -> null
@@ -173,9 +179,10 @@ void linkedList<T>::addElementAfter(T dataToFind, T dataToAddAfterFoundData)
 template <typename T>
 void linkedList<T>::deleteElement(T dataToDelete)
 {
-    Node<T>* searchForNodeToDelete{head};
+    Node<T>* searchForNodeToDelete{};
+    searchForNodeToDelete = head;
 
-    if(searchForNodeToDelete -> data == nullptr)
+    if(searchForNodeToDelete == nullptr)
     {
         std::cout << "\n\nUnable to delete \"" << dataToDelete << "\" from the linked list,\n"
                   << "because the linked list is empty.\n\n";
@@ -185,13 +192,16 @@ void linkedList<T>::deleteElement(T dataToDelete)
     {
         if(searchForNodeToDelete -> next -> data == dataToDelete)
         {
+            Node<T>* nodeToDelete{searchForNodeToDelete -> next};
             searchForNodeToDelete -> next = searchForNodeToDelete -> next -> next;
+
+            delete nodeToDelete;
             return;
         }
 
         else
         {
-            dataToDelete = dataToDelete -> next;
+            searchForNodeToDelete = searchForNodeToDelete -> next;
         }
     }
 
@@ -200,7 +210,11 @@ void linkedList<T>::deleteElement(T dataToDelete)
 }
 
 /*
+    Lastly, we have the function to that prints the node's data to the console.
 
+    In this case, it also prints which number node it is along with the node's data.
+
+    If the link it is empty, it will notify the user.
  */
 
 template <typename T>
@@ -268,6 +282,24 @@ int main()
 
     colors.addElementAfter("blue", "indigo");
     colors.display();
+
+    std::cout << "Now let's try out the \"deleteElement\" function. Which should delete a node\n"
+              << "containing specified data.\n"
+              << "Let's first add a color to remove, so we will add \"pink\" after the node containing \"indigo\".\n"
+              << "Let print it to see that it worked first.\n\n";
+
+    colors.addElementAfter("indigo", "pink");
+    colors.display();
+
+    std::cout << "Now let's delete pink and print the list to see if it worked.\n\n";
+
+    colors.deleteElement("pink");
+    colors.display();
+
+    std::cout << "That did it! The color pink is no longer in the list and it has been properly deleted.\n"
+              << "If it was not properly deleted, the node with the color pink will no free up the memory\n"
+              << "that it is using back to the OS. This will cause a memory leak in the application.\n\n"
+              << "This concludes the linked lists introduction. Next we will explore a doubly linked list.\n\n";
 
     return 0;
 }
