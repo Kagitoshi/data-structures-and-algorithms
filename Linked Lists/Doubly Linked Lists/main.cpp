@@ -474,7 +474,7 @@ int main()
     std::cout << "That did it! The color pink is no longer in the list and it has been properly deleted.\n"
               << "If it was not properly deleted, the node with the color pink will no free up the memory\n"
               << "that it is using back to the OS. This will cause a memory leak in the application.\n\n"
-              << "This concludes the linked lists introduction. Next we will explore a doubly linked list.\n\n";
+              << "This concludes the out introduction to doubly linked list.\n\n";
 
     return 0;
 }
