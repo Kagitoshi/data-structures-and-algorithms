@@ -25,6 +25,7 @@ class linkedList
 private:
     Node<T>* head;
     Node<T>* tail;
+    int numberOfNodesInList{0};
 
 public:
     linkedList()
@@ -33,11 +34,16 @@ public:
         tail = nullptr;
     }
 
+    //Modifying Functions
     void addElementFirst(T dataToAddAtFirstNode);
     void addElementEnd(T dataToAddAtLastNode);
     void addElementAfter(T dataToFind, T dataToAddAfterFoundData);
     void deleteElement(T dataToDelete);
+
+    //Display Functions
     void display();
+    void displayBackwards();
+    void printNodeCount();
 };
 /*
     Add a Node with Data to the front of the Linked list.
@@ -71,11 +77,15 @@ void linkedList<T>::addElementFirst(T dataToAddAtFirstNode)
         newNode -> previous = nullptr;
         head -> previous = newNode;
         head = newNode;
+
+        numberOfNodesInList++;
     }
     else
     {
         head = newNode;
         tail = newNode;
+
+        numberOfNodesInList++;
     }
 }
 
@@ -115,11 +125,15 @@ void linkedList<T>::addElementEnd(T dataToAddAtLastNode)
         newNode -> previous = tail;
         tail -> next = newNode;
         tail = newNode;
+
+        numberOfNodesInList++;
     }
     else
     {
         head = newNode;
         tail = newNode;
+
+        numberOfNodesInList++;
     }
 }
 
@@ -159,6 +173,8 @@ void linkedList<T>::addElementAfter(T dataToFind, T dataToAddAfterFoundData)
     if(tail -> data == dataToFind)
     {
         addElementEnd(dataToAddAfterFoundData);
+
+        return;
     }
     else
     {}
@@ -176,8 +192,13 @@ void linkedList<T>::addElementAfter(T dataToFind, T dataToAddAfterFoundData)
 
             nodeToSearch -> next -> previous = newNode;
             nodeToSearch -> next = newNode;
+
+            numberOfNodesInList++;
+            
             return;
         }
+        else
+        {}
         nodeToSearch = nodeToSearch -> next;
     }
 
@@ -241,7 +262,8 @@ void linkedList<T>::deleteElement(T dataToDelete)
     if(head == nullptr)
     {
         std::cout << "\n\nUnable to delete \"" << dataToDelete << "\" from the linked list,\n"
-                  << "because the linked list is empty.\n\n";
+                  << "because the linked list is empty.\n" 
+                  << "There are " << numberOfNodesInList << "in the list.\n\n";
     }
     else if(head -> data == dataToDelete)
     {
@@ -256,12 +278,10 @@ void linkedList<T>::deleteElement(T dataToDelete)
                 that the tail is assigned to.
              */
             delete head;
-
-
+            
             //Be sure to reassign the head and tail to null pointers.
             head = nullptr;
             tail = nullptr;
-
             std::cout << "Deleted " << dataToDelete << ".\n"
                       << "It was the only node in the list. The list should be empty.\n\n";
         }
@@ -276,6 +296,8 @@ void linkedList<T>::deleteElement(T dataToDelete)
                       << "The new head is now " << head -> data << ".\n";
         }
 
+        numberOfNodesInList--;
+
         return;
     }
     else if(tail -> data == dataToDelete)
@@ -287,6 +309,8 @@ void linkedList<T>::deleteElement(T dataToDelete)
         std::cout << "Deleted " << dataToDelete << ".\n"
                   << "It was the tail node of the list. \n"
                   << "The new tail is now " << tail -> data << ".\n";
+
+        numberOfNodesInList--;
         return;
     }
     else
@@ -302,6 +326,9 @@ void linkedList<T>::deleteElement(T dataToDelete)
             searchForNodeToDelete -> next = searchForNodeToDelete -> next -> next;
             delete searchForNodeToDelete -> next -> previous;
             searchForNodeToDelete -> next -> previous = searchForNodeToDelete;
+
+            numberOfNodesInList--;
+
             return;
         }
 
@@ -312,7 +339,8 @@ void linkedList<T>::deleteElement(T dataToDelete)
     }
 
     std::cout << "\n\nThe data you wish to delete, \"" << dataToDelete
-              << "\" could not be found in the linked list.\n\n";
+              << "\" could not be found in the linked list.\n"
+              << "There are currently "<< numberOfNodesInList << " nodes in the list.\n\n";
 }
 
 /*
@@ -328,9 +356,12 @@ void linkedList<T>::display()
 
     if(currentNode == nullptr)
     {
-        std::cout << "\n\nThe linked list is currently empty.\n\n";
+        std::cout << "\n\nThe linked list is currently empty.\n"
+                  << "There are currently "<< numberOfNodesInList << " nodes in the list.\n\n";
         return;
     }
+    else
+    {}
 
     int i{0};
 
@@ -361,6 +392,7 @@ void linkedList<T>::display()
     }
 
     std::cout << "\n********* END OF LIST *********\n\n"
+              << "There is a total of "<< numberOfNodesInList << " nodes in the list.\n\n"
               << "The current list's head and tail nodes are:\n"
               << "Head Node: " << head -> data << '\n'
               << "Tail Node: " << tail -> data << '\n';
@@ -368,6 +400,76 @@ void linkedList<T>::display()
     std::cout << '\n';
 }
 
+
+/*
+    Same as the display function above except we are going to bring it in reverse order.
+    Starting from the tail to the head of the list.
+*/
+template <typename T>
+void linkedList<T>::displayBackwards()
+{
+    Node<T>* currentNode{tail};
+
+    if(currentNode == nullptr)
+    {
+        std::cout << "\n\nThe linked list is currently empty.\n"
+                  << "There is a total of "<< numberOfNodesInList << " nodes in the list.\n\n";
+        return;
+    }
+    else
+    {}
+
+    int i{numberOfNodesInList};
+
+    while(currentNode != nullptr)
+    {
+        std::cout << "\n";
+        std::cout << "********* Node #" << i-- << " - " << currentNode -> data <<  " *********\n\n";
+
+        if(currentNode -> next == nullptr)
+        {
+            std::cout << "Next Node    : NULL POINTER\n";
+        }
+        else
+        {
+            std::cout << "Next Node    : " << currentNode -> next -> data << '\n';
+        }
+
+        if(currentNode -> previous == nullptr)
+        {
+            std::cout << "Previous Node: NULL POINTER\n";
+        }
+        else
+        {
+            std::cout << "Previous Node: " << currentNode -> previous -> data << '\n';
+        }
+
+        currentNode = currentNode -> previous;
+    }
+
+    std::cout << "\n********* END OF LIST *********\n\n"
+              << "There is a total of "<< numberOfNodesInList << " nodes in the list.\n\n"
+              << "The current list's head and tail nodes are:\n"
+              << "Head Node: " << head -> data << '\n'
+              << "Tail Node: " << tail -> data << '\n';
+
+    std::cout << '\n';
+}
+
+//A maybe handy function to print how many members are in the list.
+template <typename T>
+void linkedList<T>::printNodeCount()
+{
+    if(numberOfNodesInList)
+    {
+        std::cout << "There are currently " << numberOfNodesInList << " nodes in the list.\n\n";
+    }
+    else
+    {
+        std::cout << "The list is empty!\n"
+                  << "There are " << numberOfNodesInList << " nodes in the list.\n\n";
+    }
+}
 
 int main()
 {
@@ -470,10 +572,23 @@ int main()
 
     colors.deleteElement("pink");
     colors.display();
-
+    
     std::cout << "That did it! The color pink is no longer in the list and it has been properly deleted.\n"
               << "If it was not properly deleted, the node with the color pink will no free up the memory\n"
               << "that it is using back to the OS. This will cause a memory leak in the application.\n\n"
+              << "Let's see if we can utilize the power of a doubly linked list further.\n"
+              << "Let's display our list again.. But backwards!\n\n";
+
+    colors.displayBackwards();
+
+    std::cout << "That was great! We were able to ensure our \"previous\" member of our nodes.\n"
+              << "works correctly. Also, with the addition of a node count variable in the linked list class\n"
+              << "we are able to keep count of the nodes to ensure we can number them when displaying backwards.\n"
+              << "It isn't required but it is a nice to have, plus you can run a function like this: \n\n";
+
+    colors.printNodeCount();
+
+    std::cout << "Pretty handy right. We can get a count of the nodes in the list without iterating through the list.\n"
               << "This concludes the out introduction to doubly linked list.\n\n";
 
     return 0;
