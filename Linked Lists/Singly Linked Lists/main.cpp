@@ -14,8 +14,8 @@
 template <typename T>
 struct Node
 {
-    T data;
-    Node* next;
+    T data {};
+    Node* next {};
 };
 
 template <typename T>
