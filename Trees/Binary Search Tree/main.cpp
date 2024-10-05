@@ -13,16 +13,23 @@ class BinaryTree {
 private:
     TreeNode<T> *root{nullptr};
 
-    void checkNodeChildren(TreeNode<T> *nodeToCheck) {
-        if (!nodeToCheck->leftNode) {
+    void checkNodeChildren(TreeNode<T> *nodeToCheck)
+    {
+        if (!nodeToCheck->leftNode)
+        {
             std::cout << "The left child is       : Null\n";
-        } else {
+        }
+        else
+        {
             std::cout << "The left child is       : " << nodeToCheck->leftNode->data << '\n';
         }
 
-        if (!nodeToCheck->rightNode) {
+        if (!nodeToCheck->rightNode)
+        {
             std::cout << "The right child is      : Null\n";
-        } else {
+        }
+        else
+        {
             std::cout << "The right child is      : " << nodeToCheck->rightNode->data << '\n';
         }
     }
@@ -45,23 +52,29 @@ public:
     BinaryTree()
     = default;
 
-    void printRoot() {
+    void printRoot()
+    {
         std::cout << "The root is " << root->data << ".\n\n";
     }
 
     void addToTree(T dataToAdd, TreeNode<T> *currentNode = nullptr) {
-        if (!root) {
+        if (!root)
+        {
             TreeNode<T> *nodeToAdd{new TreeNode<T>};
             nodeToAdd->data = dataToAdd;
 
             root = nodeToAdd;
             return;
-        } else if (!currentNode) {
+        }
+        else if (!currentNode)
+        {
             currentNode = root;
         }
 
-        if (dataToAdd < currentNode->data) {
-            if (!currentNode->leftNode) {
+        if (dataToAdd < currentNode->data)
+        {
+            if (!currentNode->leftNode)
+            {
                 TreeNode<T> *nodeToAdd{new TreeNode<T>};
                 nodeToAdd->data = dataToAdd;
 
@@ -71,12 +84,17 @@ public:
                           << currentNode->data << ":\n"
                           << dataToAdd << '\n';
                 return;
-            } else {
+            }
+            else
+            {
                 addToTree(dataToAdd, currentNode->leftNode);
                 return;
             }
-        } else if (dataToAdd > currentNode->data) {
-            if (!currentNode->rightNode) {
+        }
+        else if (dataToAdd > currentNode->data)
+        {
+            if (!currentNode->rightNode)
+            {
                 TreeNode<T> *nodeToAdd{new TreeNode<T>};
                 nodeToAdd->data = dataToAdd;
 
@@ -87,11 +105,15 @@ public:
                           << dataToAdd << '\n';
 
                 return;
-            } else {
+            }
+            else
+            {
                 addToTree(dataToAdd, currentNode->rightNode);
                 return;
             }
-        } else {
+        }
+        else
+        {
             std::cout << "A Tree node with the data " << dataToAdd << " already exist.\n"
                       << "A new node has not been added.\n\n";
 
@@ -99,73 +121,104 @@ public:
         }
     }
 
-    void printTree(TreeNode<T> *currentNode = nullptr) {
-        if (!currentNode) {
+    void printTree(TreeNode<T> *currentNode = nullptr)
+    {
+        if (!currentNode)
+        {
             currentNode = root;
-        } else {
+        }
+        else
+        {
         }
 
-        if (currentNode->leftNode) {
+        if (currentNode->leftNode)
+        {
             printTree(currentNode->leftNode);
-        } else {
         }
-
+        else
+        {
+        }
         std::cout << "The current node contains " << currentNode->data << '\n';
 
-        if (currentNode->rightNode) {
+        if (currentNode->rightNode)
+        {
             printTree(currentNode->rightNode);
-        } else {
+        }
+        else
+        {
         }
     }
 
-    void searchForValue(T dataToFind, TreeNode<T> *currentNode = nullptr) {
-        if (!currentNode) {
-            if (!root) {
+    void searchForValue(T dataToFind, TreeNode<T> *currentNode = nullptr)
+    {
+        if (!currentNode)
+        {
+            if (!root)
+            {
                 std::cout << "The list is empty.\n";
                 return;
-            } else if (dataToFind == root->data) {
+            }
+            else if (dataToFind == root->data)
+            {
                 std::cout << "The data " << dataToFind << " has been located.\n"
                           << "It is the root of the tree.\n";
 
                 checkNodeChildren(root);
 
                 return;
-            } else {
+            }
+            else
+            {
                 currentNode = root;
             }
-        } else {
+        }
+        else
+        {
         }
 
-        if (dataToFind < currentNode->data) {
-            if (!currentNode->leftNode) {
+        if (dataToFind < currentNode->data)
+        {
+            if (!currentNode->leftNode)
+            {
                 std::cout << "The data " << dataToFind << " was not located in the tree.\n";
 
                 return;
-            } else if (dataToFind == currentNode->leftNode->data) {
+            }
+            else if (dataToFind == currentNode->leftNode->data)
+            {
                 std::cout << "The data " << dataToFind << " has been located.\n"
                           << "It is the left child of : " << currentNode->data << '\n';
 
                 checkNodeChildren(currentNode->leftNode);
                 return;
-            } else {
+            }
+            else
+            {
                 searchForValue(dataToFind, currentNode->leftNode);
 
                 return;
             }
 
-        } else {
-            if (!currentNode->rightNode) {
+        }
+        else
+        {
+            if (!currentNode->rightNode)
+            {
                 std::cout << "The data " << dataToFind << " was not located in the tree.\n";
 
                 return;
-            } else if (dataToFind == currentNode->rightNode->data) {
+            }
+            else if (dataToFind == currentNode->rightNode->data)
+            {
                 std::cout << "The data " << dataToFind << " has been located.\n"
                           << "It is the right child of : " << currentNode->data << '\n';
 
                 checkNodeChildren(currentNode->rightNode);
 
                 return;
-            } else {
+            }
+            else
+            {
                 searchForValue(dataToFind, currentNode->rightNode);
 
                 return;
