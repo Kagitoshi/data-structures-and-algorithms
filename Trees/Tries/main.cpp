@@ -72,6 +72,59 @@ private:
         return words;
     }
 
+    // While it works... It isn't pretty. Let's comment it out.
+//    void printAllNodeKeys(TrieNode* rootNode, std::string nodeName = "Root")
+//    {
+//        TrieNode* currentNode(rootNode);
+//        std::cout << nodeName << " Node's Values: \n";
+//        for(auto const& child : currentNode->childNodes)
+//        {
+//            std::cout << child.first << ' ';
+//        }
+//
+//        std::cout << "\n\n";
+//
+//        for (auto const& child : currentNode->childNodes)
+//        {
+//            if(child.first != '*')
+//            {
+//                std::string childValue{child.first};
+//                printAllNodeKeys(child.second, childValue);
+//            }
+//            else
+//            {
+//
+//            }
+//        }
+//    }
+
+std::string autoCorrect(TrieNode* node, std::string word)
+{
+    TrieNode* currentNode{node};
+
+    std::string longestPrefix{""};
+
+    for(char const& i : word)
+    {
+        if (currentNode->childNodes[i])
+        {
+            longestPrefix += i;
+            currentNode = currentNode->childNodes[i];
+        }
+        else
+        {
+        }
+
+    }
+
+    std::vector<std::string> words{};
+
+    currentNode = search(longestPrefix);
+    collectAllWords(currentNode, words);
+
+    return longestPrefix + words[0];
+}
+
 
 public:
     TrieNode* search(std::string& currentWord)
@@ -83,6 +136,11 @@ public:
     {
         insertion(root, currentWord);
     }
+
+//    void printAllNodeKeys()
+//    {
+//        printAllNodeKeys(root);
+//    }
 
     void collectAllWords()
     {
@@ -123,13 +181,31 @@ public:
         }
 
         std::cout << "\nEnd of list.\n\n";
-
     }
+
+    void autoCorrect(std::string word)
+    {
+        std::string longestPrefix{""};
+
+        TrieNode* currentNode{search(word)};
+
+        if(!currentNode)
+        {
+            std::cout << "That word doesn't seem to spelled correctly or it has not been added\n"
+                         "to our auto complete program. Let me try to help.\n\n";
+
+            std::cout << "Did you mean to spell : " << autoCorrect(root, word) << "?\n";
+        }
+        else
+        {
+            std::cout << word << " seems to be spelled correctly. Or we spelled it wrong.\n";
+        };
+    }
+
 };
 
 
-int main()
-{
+int main() {
     std::cout << "Let's make an auto-completion programing using tries.\n"
               << "Tries use nodes of hashmaps using recursion to insert and retrieve words.\n"
               << "Also, that is were the word trie comes from, the word retrieval.\n"
@@ -158,6 +234,16 @@ int main()
 
     words.autoComplete("ca");
 
+//    std::cout << "Let's print out all the values in each node.\n";
+//
+//    words.printAllNodeKeys();
+//
+//    std::cout << "That worked... but it is a bit confusing... Let's comment it out for now... Including this line.\n\n";
 
+
+    std::cout << "Let's see if we can get it to auto correct the spelling of a word by getting the longest\n"
+              << "possible prefix. We will enter the word \"catnar\" and see if can return \"catnap\"\n";
+
+    words.autoCorrect("catnar");
     return 0;
 }
