@@ -19,7 +19,7 @@ private:
 
         for(char i : currentWord)
         {
-            if (currentNode->childNodes[i])
+            if (currentNode->childNodes.find(i) != currentNode->childNodes.end())
             {
                 currentNode = currentNode->childNodes[i];
             }
@@ -98,31 +98,27 @@ private:
 //        }
 //    }
 
-std::string autoCorrect(TrieNode* node, std::string word)
+std::string getLongestPrefix(TrieNode* node, std::string word)
 {
     TrieNode* currentNode{node};
 
     std::string longestPrefix{""};
 
-    for(char const& i : word)
+    for(char i : word)
     {
-        if (currentNode->childNodes[i])
+        if (currentNode->childNodes.find(i) != currentNode->childNodes.end())
         {
             longestPrefix += i;
             currentNode = currentNode->childNodes[i];
         }
         else
         {
+            break;
         }
 
     }
 
-    std::vector<std::string> words{};
-
-    currentNode = search(longestPrefix);
-    collectAllWords(currentNode, words);
-
-    return longestPrefix + words[0];
+    return longestPrefix;
 }
 
 
@@ -185,8 +181,6 @@ public:
 
     void autoCorrect(std::string word)
     {
-        std::string longestPrefix{""};
-
         TrieNode* currentNode{search(word)};
 
         if(!currentNode)
@@ -194,7 +188,14 @@ public:
             std::cout << "That word doesn't seem to spelled correctly or it has not been added\n"
                          "to our auto complete program. Let me try to help.\n\n";
 
-            std::cout << "Did you mean to spell : " << autoCorrect(root, word) << "?\n";
+            std::string longestPrefix{getLongestPrefix(root, word)};
+            autoComplete(longestPrefix);
+
+            std::vector<std::string> words{};
+            currentNode = search(longestPrefix);
+            collectAllWords(currentNode, words);
+
+            std::cout << "Did you mean to spell \"" << longestPrefix + words[0]  << "\"?\n";
         }
         else
         {
@@ -245,5 +246,12 @@ int main() {
               << "possible prefix. We will enter the word \"catnar\" and see if can return \"catnap\"\n";
 
     words.autoCorrect("catnar");
+
+    std::cout << "Good that worked, now let's go for something crazy like \"cakldike\" and see what happens?\n";
+
+    words.autoCorrect("cakldike");
+
+    std::cout << "We made it print the first word collected in the vector.\n";
+
     return 0;
 }
