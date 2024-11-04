@@ -282,6 +282,15 @@ int main()
 
     alice.bfsTraverse(alice, irena);
 
+    std::cout << "\nSo, while DFS and BFS are similar and in this situation they are almost identical in speed,\n"
+              << "the decision on which on to use can be an easy one to make depending on the situation.\n"
+              << "For example, if you were going to check a family tree and you starting point is great great grandparent,\n"
+              << "and you want to find a single great great grandchild, it might be best to use a DFS.\n"
+              << "BFS is good for searching for things that might be near the target.\n"
+              << "DFS is good for searching for things further away from the target.\n"
+              << "That wraps this up for now. Time to implement a \"Measured Graph\", but that's for another program.\n"
+              << "PEACE!.\n\n";
+
     return 0;
 
 }
