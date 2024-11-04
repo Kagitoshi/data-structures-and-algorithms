@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include <queue>
 #include <unordered_map>
 #include <vector>
 
@@ -12,10 +13,12 @@ private:
     std::vector<Vertex*> m_neighbors;
     //    std::vector<std::reference_wrapper<Vertex>> m_neighbors;
 
-    void dfsTraverse(Vertex& start, Vertex& vertexToFind, std::unordered_map<T, bool>& visited, int nodesAway = 0)
+    void dfsTraverse(Vertex& start, const T& startingVector, Vertex& vertexToFind, std::unordered_map<T, bool>& visited,
+                     bool& found, int nodesAway = 0)
     {
         if(start.m_data == vertexToFind.m_data)
         {
+            visited[start.m_data] = true;
             std::cout << vertexToFind.m_data << " was found.\n"
                       << "Here are the neighbors: \n";
 
@@ -24,7 +27,14 @@ private:
                 std::cout << i->m_data << '\n';
             }
 
-            std::cout << "From the starting point, it was " << nodesAway << " nodes away.\n";
+            std::cout << "From the starting point, " << startingVector << ", it was " << nodesAway << " nodes away.\n";
+
+            found = true;
+            return;
+        }
+        else if (found)
+        {
+            visited[start.m_data] = true;
             return;
         }
         else
@@ -32,11 +42,16 @@ private:
 
         visited[start.m_data] = true;
 
-        std::cout << "Current Vertex: " << start.m_data << "\n";
+        std::cout << "\nCurrent Vertex: " << start.m_data << "\n";
 
         for(Vertex* i : start.m_neighbors)
         {
-            std::cout << "Current Vertex: " << start.m_data << "\n";
+            if(found)
+            {
+                return;
+            }
+            else
+            {}
             if(visited.find(i->m_data) != visited.end())
             {
                 std::cout << "Already visited " << i->m_data << '\n';
@@ -45,19 +60,29 @@ private:
             else
             {
                 ++nodesAway;
-                dfsTraverse(*i, vertexToFind, visited, nodesAway);
+                std::cout << "Going to " << i->m_data << " from " << start.m_data << ".\n";
+                dfsTraverse(*i, startingVector, vertexToFind, visited, found, nodesAway);
                 --nodesAway;
+                if(found)
+                {
+                    return;
+                }
+                else
+                {
+                    std::cout << "Coming back from " << i->m_data << " to " << start.m_data << ".\n";
+                }
             }
         }
 
-        if(visited.find(vertexToFind.m_data) != visited.end())
+        if(found)
         {
         }
         else
         {
-            std::cout << vertexToFind.m_data << " is not cannot be reached depth-wise, through this vertex.\n";
-            return;
+            std::cout << vertexToFind.m_data << " is not cannot be reached depth-wise from " << start.m_data << ".\n\n";
         }
+
+
     }
 
 public:
@@ -93,7 +118,54 @@ public:
     {
         std::unordered_map<T, bool> visited{};
 
-        dfsTraverse(start, vertexToFind, visited);
+        bool found{false};
+
+        T startingVector{start.m_data};
+
+        dfsTraverse(start, startingVector, vertexToFind, visited, found);
+    }
+
+    void bfsTraverse(Vertex& start, Vertex& vertexToFind)
+    {
+        std::unordered_map<T, bool> visited{};
+        visited[start.m_data] = true;
+
+        std::queue<Vertex> queueOfVertices{};
+        queueOfVertices.emplace(start);
+
+        bool found{false};
+
+        Vertex currentVertex{start};
+
+        while(!queueOfVertices.empty())
+        {
+            currentVertex = queueOfVertices.front();
+            queueOfVertices.pop();
+
+            std::cout << "Now checking " << currentVertex.m_data << " neighbors.\n";
+            for(Vertex* i : currentVertex.m_neighbors)
+            {
+                if(i->m_data == vertexToFind.m_data)
+                {
+                    std::cout << i->m_data << " was found.\n";
+                    return;
+                }
+                else if(visited.find(i->m_data) != visited.end())
+                {
+                    std::cout << "Already visited " << i->m_data << '\n';
+                }
+                else
+                {
+                    std::cout << "Adding " << i->m_data << " to the queue.\n";
+                    queueOfVertices.emplace(*i);
+                    visited[i->m_data] = true;
+                }
+            }
+
+            std::cout << vertexToFind.m_data << " was not found connected to " << currentVertex.m_data << ".\n\n";
+
+        }
+        std::cout << vertexToFind.m_data << " could not be found connected to this graph.\n\n";
     }
 
 };
@@ -197,6 +269,18 @@ int main()
               << "We will start at \"Alice\" and look for \"Irena\"\n";
 
     alice.dfsTraverse(alice, irena);
+
+    std::cout << "So, we were able to do a DFS for \"Irena\" and found she was 3 nodes away from \"Alice\".\n"
+              << "Now, we will try doing a \"Breadth-First Search\"! BFS does not use recursion, but it uses a\n"
+              << "queue for the algorithm. So, we have our starting Vertex. We add it to the hash map and mark it\n"
+              << "as visited. Add the starting vertex to the queue. Then, we will run a loop till the queue\n"
+              << "is empty. The loop will first remove remove the first vertex in the queue and we will call it\n"
+              << "\"Current Vertex\". We will iterate over all the non-visited neighbors. Visited neighbors will be\n"
+              << "ignored while non-visited neighbors will be added to the queue and marked as visited in the hash map.\n"
+              << "We repeat this until the eue is empty or the Vertex has been found.\n"
+              << "Just like we did with the BFS we will start at \"Alice\" and look for \"Irena\"\n";
+
+    alice.bfsTraverse(alice, irena);
 
     return 0;
 
