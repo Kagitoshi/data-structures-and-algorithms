@@ -16,10 +16,10 @@ public:
     {
         std::cout << "Created a new vertex. The data in the vertex is: " << data << '\n';
     }
-    void addAdjacentVertex(Vertex adjacentVertex, int weight)
+    void addAdjacentVertex(Vertex* adjacentVertex, int weight)
     {
-        this->m_vertices[&adjacentVertex] = weight;
-        std::cout << adjacentVertex.m_data << " has been added with a weight of " << weight << ".\n";
+        this->m_vertices[adjacentVertex] = weight;
+        std::cout << adjacentVertex->m_data << " has been added with a weight of " << weight << ".\n";
     }
 
     void dijkstraShortestPath(Vertex startingCity, Vertex finalDestination)
@@ -27,7 +27,7 @@ public:
         std::unordered_map<T, int> cheapestPricesTable {};
         std::unordered_map<T, T> cheapestPreviousStopoverCityTable {};
 
-        std::vector<Vertex*> unvisitedCities{};
+        std::vector<Vertex*> unvisitedCities{&startingCity};
 
         std::unordered_map<T, bool> visitedCities {};
 
@@ -43,7 +43,8 @@ public:
 
             for(auto i : currentCity->m_vertices)
             {
-                if(visitedCities.find(i.first->m_data) == visitedCities.end())
+                if(visitedCities.find(i.first->m_data) == visitedCities.end() &&
+                   std::find(unvisitedCities.begin(), unvisitedCities.end(), i.first) == unvisitedCities.end())
                 {
                     unvisitedCities.push_back(i.first);
                 }
@@ -67,26 +68,22 @@ public:
                     else
                     {}
                 }
+
             }
 
             if(!unvisitedCities.empty())
             {
+                currentCity = unvisitedCities[0];
 
-                auto newCurrentCity = [&] (Vertex* cheapest) {
-                    cheapest = unvisitedCities[0];
-                    for(auto i : unvisitedCities)
+                for(auto i : unvisitedCities)
+                {
+                    if(cheapestPricesTable[i->m_data] < cheapestPricesTable[currentCity->m_data])
                     {
-                        if(cheapestPricesTable[i->m_data] < cheapestPricesTable[cheapest->m_data])
-                        {
-                            cheapest = i;
-                        }
+                        currentCity = i;
                     }
-                    return cheapest;
-                };
-
-                currentCity = newCurrentCity;
-                
-                break;
+                    else
+                    {}
+                }
             }
             else
             {
@@ -94,7 +91,36 @@ public:
             }
         }
 
-            std::cout << "Algorithm done!... Check it.\n";
+        std::vector<T> shortestPath{};
+
+        T currentCityName {finalDestination.m_data};
+
+        while (currentCityName != startingCity.m_data)
+        {
+            shortestPath.push_back(currentCityName);
+
+            currentCityName = cheapestPreviousStopoverCityTable[currentCityName];
+        }
+
+        shortestPath.push_back(startingCity.m_data);
+
+        std::cout << "The cheapest path from " << startingCity.m_data << " to " << finalDestination.m_data << '\n'
+                  << "costs $" << cheapestPricesTable[finalDestination.m_data] << " and the path is as follows: \n";
+
+
+        for(int i{static_cast<int>(shortestPath.size() -1)}; i >= 0; --i)
+        {
+            if(i == 0)
+            {
+                std::cout << shortestPath[i] << '\n\n';
+            }
+            else
+            {
+                std::cout << shortestPath[i] << " -> ";
+            }
+        }
+
+        std::cout << "Enjoy your flight!\n\n";
     }
 };
 
@@ -113,8 +139,8 @@ int main()
     std::cout << "Now, let's add them to each other as adjacent vertices and give them a weight\n"
               << "that symbolizes a cost of a ticket to fly from itself to the other vertex.\n\n";
 
-    dallas.addAdjacentVertex(toronto, 138);
-    toronto.addAdjacentVertex(dallas, 216);
+    dallas.addAdjacentVertex(&toronto, 138);
+    toronto.addAdjacentVertex(&dallas, 216);
 
     std::cout << "Cool. Weighted graphs are useful for all types of datasets and some with powerful algorithms.\n"
               << "We can use one of these algorithms to helps us solve the \"The Shortest Path\" problem.\n"
@@ -150,14 +176,14 @@ int main()
     Vertex<std::string> denver {"Denver"};
     Vertex<std::string> elPaso {"El Paso"};
 
-    atlanta.addAdjacentVertex(boston, 100);
-    atlanta.addAdjacentVertex(denver, 160);
-    boston.addAdjacentVertex(chicago, 120);
-    boston.addAdjacentVertex(denver, 180);
-    chicago.addAdjacentVertex(elPaso, 80);
-    denver.addAdjacentVertex(chicago, 40);
-    denver.addAdjacentVertex(elPaso, 140);
-    elPaso.addAdjacentVertex(boston, 100);
+    atlanta.addAdjacentVertex(&boston, 100);
+    atlanta.addAdjacentVertex(&denver, 160);
+    boston.addAdjacentVertex(&chicago, 120);
+    boston.addAdjacentVertex(&denver, 180);
+    chicago.addAdjacentVertex(&elPaso, 80);
+    denver.addAdjacentVertex(&chicago, 40);
+    denver.addAdjacentVertex(&elPaso, 140);
+    elPaso.addAdjacentVertex(&boston, 100);
 
     atlanta.dijkstraShortestPath(atlanta, elPaso);
 
