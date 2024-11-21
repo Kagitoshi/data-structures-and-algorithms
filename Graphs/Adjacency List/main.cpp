@@ -168,6 +168,43 @@ public:
         std::cout << vertexToFind.m_data << " could not be found connected to this graph.\n\n";
     }
 
+    void silentBfsTraverse(Vertex& start, T valueToFind)
+    {
+        std::unordered_map<T, bool> visited{};
+        visited[start.m_data] = true;
+
+        std::queue<Vertex> queueOfVertices{};
+        queueOfVertices.emplace(start);
+
+        bool found{false};
+
+        Vertex currentVertex{start};
+
+        while(!queueOfVertices.empty())
+        {
+            currentVertex = queueOfVertices.front();
+            queueOfVertices.pop();
+
+            for(Vertex* i : currentVertex.m_neighbors)
+            {
+                if(i->m_data == valueToFind)
+                {
+                    std::cout << i->m_data << " was found.\n";
+                    return;
+                }
+                else if(visited.find(i->m_data) != visited.end())
+                {
+                }
+                else
+                {
+                    queueOfVertices.emplace(*i);
+                    visited[i->m_data] = true;
+                }
+            }
+        }
+        std::cout << valueToFind << " could not be found.\n\n";
+    }
+
 };
 
 
@@ -290,6 +327,14 @@ int main()
               << "DFS is good for searching for things further away from the target.\n"
               << "That wraps this up for now. Time to implement a \"Measured Graph\", but that's for another program.\n"
               << "PEACE!.\n\n";
+
+
+    std::cout << "Never-mind, seems like the book would like us to do a BFS but only have it return the value only,\n"
+              << "and if it doesn't it should print null. So let's modify ours to be silent and to search for.\n"
+              << "not a vertex but a value instead.\n\n";
+
+    alice.silentBfsTraverse(alice, "irena");
+    alice.silentBfsTraverse(alice, "edwin");
 
     return 0;
 
