@@ -180,6 +180,8 @@ public:
 
         Vertex currentVertex{start};
 
+        std::unordered_map<T, T> previousNeighborTable{};
+
         while(!queueOfVertices.empty())
         {
             currentVertex = queueOfVertices.front();
@@ -187,22 +189,65 @@ public:
 
             for(Vertex* i : currentVertex.m_neighbors)
             {
-                if(i->m_data == valueToFind)
-                {
-                    std::cout << i->m_data << " was found.\n";
-                    return;
-                }
-                else if(visited.find(i->m_data) != visited.end())
+
+
+                if(visited.find(i->m_data) != visited.end())
                 {
                 }
                 else
                 {
                     queueOfVertices.emplace(*i);
                     visited[i->m_data] = true;
+                    previousNeighborTable[i->m_data] = currentVertex.m_data;
                 }
             }
         }
-        std::cout << valueToFind << " could not be found.\n\n";
+
+        std::vector<T> shortestPath{};
+
+        T& currentValue {valueToFind};
+        int hopsAway{0};
+
+        if(visited.find(valueToFind) == visited.end())
+        {
+            std::cout << valueToFind << " could not be found.\n\n";
+            return;
+        }
+        else
+        {
+            while(currentValue != start.m_data)
+            {
+                shortestPath.push_back(currentValue);
+
+                currentValue = previousNeighborTable[currentValue];
+                hopsAway++;
+            }
+        }
+
+        shortestPath.push_back(start.m_data);
+
+        std::cout << "The shortest path from " << start.m_data << " to " << valueToFind << '\n'
+                  << "they are " << hopsAway << " hops away and the path is as follows: \n";
+
+
+        for(int i{static_cast<int>(shortestPath.size() -1)}; i >= 0; --i)
+        {
+            if(i == 0)
+            {
+                std::cout << shortestPath[i] << "\n\n";
+            }
+            else
+            {
+                std::cout << shortestPath[i] << " -> ";
+            }
+        }
+
+        std::cout << "Networking... yay....\n\n";
+    }
+
+    void shortestPath(Vertex& startingVertex, Vertex& VertexToFind)
+    {
+
     }
 
 };
@@ -329,12 +374,32 @@ int main()
               << "PEACE!.\n\n";
 
 
-    std::cout << "Never-mind, seems like the book would like us to do a BFS but only have it return the value only,\n"
-              << "and if it doesn't it should print null. So let's modify ours to be silent and to search for.\n"
-              << "not a vertex but a value instead.\n\n";
+    std::cout << "Everything is working as planned. Now we can use this to find a the shortest path without weights.\n"
+              << "First thing that comes to my mind is RIP in networking but the example in the book is using\n"
+              << "social networking as example. So let's first make a small social network.\n\n";
 
-    alice.silentBfsTraverse(alice, "irena");
-    alice.silentBfsTraverse(alice, "edwin");
+    Vertex<std::string> idris {"Idris"};
+    Vertex<std::string> kamil {"Kamil"};
+    Vertex<std::string> talia {"Talia"};
+    Vertex<std::string> lina {"Lina"};
+    Vertex<std::string> ken {"Ken"};
+    Vertex<std::string> marco {"Marco"};
+    Vertex<std::string> sasha {"Sasha"};
+
+    idris.addNeighbor(idris,kamil );
+    kamil.addNeighbor(kamil, lina);
+    lina.addNeighbor(lina, sasha);
+    sasha.addNeighbor(sasha, marco);
+    marco.addNeighbor(marco, ken);
+    ken.addNeighbor(ken, talia);
+    talia.addNeighbor(talia, idris);
+
+
+    idris.silentBfsTraverse(idris, "Edwin");
+    idris.silentBfsTraverse(idris, "Lina");
+
+
+    std::cout << "Cool. That worked.\n\n";
 
     return 0;
 
