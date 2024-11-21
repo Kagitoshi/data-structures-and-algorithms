@@ -22,6 +22,12 @@ public:
         std::cout << adjacentVertex->m_data << " has been added with a weight of " << weight << ".\n";
     }
 
+    void addMutualAdjacentVertex(Vertex* adjacentVertex, int weight = 1)
+    {
+        this->m_vertices[adjacentVertex] = weight;
+        adjacentVertex->m_vertices[this] = 1;
+    }
+
     void dijkstraShortestPath(Vertex startingCity, Vertex finalDestination)
     {
         std::unordered_map<T, int> cheapestPricesTable {};
@@ -112,7 +118,7 @@ public:
         {
             if(i == 0)
             {
-                std::cout << shortestPath[i] << '\n\n';
+                std::cout << shortestPath[i] << "\n\n";
             }
             else
             {
@@ -186,5 +192,29 @@ int main()
     elPaso.addAdjacentVertex(&boston, 100);
 
     atlanta.dijkstraShortestPath(atlanta, elPaso);
+
+    std::cout << "Everything is working as planned. Now we can use this to find a the shortest path with out weights.\n"
+              << "First thing that comes to my mind is RIP in networking but the example in the book is using\n"
+              << "social networking as example. So let's first make a small social network.\n\n";
+
+    Vertex<std::string> idris {"Idris"};
+    Vertex<std::string> kamil {"Kamil"};
+    Vertex<std::string> talia {"Talia"};
+    Vertex<std::string> lina {"Lina"};
+    Vertex<std::string> ken {"Ken"};
+    Vertex<std::string> marco {"Marco"};
+    Vertex<std::string> sasha {"Sasha"};
+
+    idris.addMutualAdjacentVertex(&kamil);
+    kamil.addMutualAdjacentVertex(&lina);
+    lina.addMutualAdjacentVertex(&sasha);
+    sasha.addMutualAdjacentVertex(&marco);
+    marco.addMutualAdjacentVertex(&ken);
+    ken.addMutualAdjacentVertex(&talia);
+    talia.addMutualAdjacentVertex(&idris);
+
+    std::cout << "Now lets see what is the fastest path from \"Idris\" to \"Lina\".\n\n";
+
+    atlanta.dijkstraShortestPath(idris, marco);
 
 }
